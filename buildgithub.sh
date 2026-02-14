@@ -1,7 +1,11 @@
 #!/bin/bash
-
 VERSION=$(cat build/Linux/version.txt)
-
+echo "Adding Files"
+git add .
+echo "Making Commit"
+git commit -m "Update: $VERSION" || echo "Nothing to commit"
+echo "Pushing"
+git push origin main
 gh release create "$VERSION" \
   build/Linux/SimpleApps \
   build/Windows/SimpleApps.exe \

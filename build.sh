@@ -123,6 +123,11 @@ for file_name in ["SimpleApps", "SimpleApps.exe", "version.txt", "tools.txt"]:
 make_zip(os.path.join(PROJECT_ROOT, "Source.zip"), PROJECT_ROOT)
 upload_file(os.path.join(PROJECT_ROOT, "Source.zip"), remote_forserver)
 
+print("Upload auf GitHub")
+result = subprocess.run(["bash", "buildgithub.sh"], capture_output=True, text=True)
+print("STDOUT:", result.stdout)
+print("STDERR:", result.stderr)
+
 sftp.close()
 transport.close()
 print("Leere Cache...")

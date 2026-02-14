@@ -15,6 +15,8 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/gorilla/websocket"
+
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/mem"
 	"golang.org/x/term"
@@ -1742,6 +1744,59 @@ func main18() {
 	}
 }
 
+func main19() {
+	var SERVER string
+	fmt.Println("Enter Server URL [default: wss://chat.bolucraft.uk/chat]")
+	fmt.Print(config.Prompt + " ")
+	fmt.Scanln(&SERVER)
+	if SERVER == "" {
+		SERVER = "wss://chat.bolucraft.uk/chat"
+	}
+
+	conn, _, err := websocket.DefaultDialer.Dial(SERVER, nil)
+	if err != nil {
+		fmt.Println("Error Connecting:", err)
+		time.Sleep(time.Second * 2)
+		return
+	}
+	defer conn.Close()
+
+	fmt.Println("Connected to ChatServer", SERVER)
+	fmt.Println("[Type 'q' or 'exit' to exit]")
+
+	done := make(chan bool)
+	go func() {
+		for {
+			_, message, err := conn.ReadMessage()
+			if err != nil {
+				fmt.Println("\nDisconnected from server.")
+				done <- true
+				return
+			}
+			fmt.Println("\n" + string(message))
+			fmt.Print(config.Prompt + " ")
+		}
+	}()
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Print(config.Prompt + " ")
+		if !scanner.Scan() {
+			break
+		}
+		text := strings.TrimSpace(scanner.Text())
+		if text == "" {
+			continue
+		}
+		conn.WriteMessage(websocket.TextMessage, []byte(text))
+		if strings.ToLower(text) == "exit" || strings.ToLower(text) == "q" {
+			break
+		}
+	}
+
+	<-done
+	fmt.Println("Client Closed.")
+}
+
 // START Config
 type Config struct {
 	FirstRun bool   `json:"first_run"`
@@ -1805,8 +1860,8 @@ func menu() {
 		clear()
 		welcometext := "----Welcome to SimpleApps----"
 		minuses := (len(welcometext) / 2) - (len(" Bye! ") / 2)
-		programs := []func(){main1, main2, main3, main4, main5, main6, main7, main8, main9, main10, main11, main12, main13, main14, main15, main16, main17, main18, update}
-		names := []string{"NumberChecker", "GradeChecker", "UnitConverter", "Number2Bar", "CoinFlip", "Countdown", "Timer", "Clock", "Magic 8-Ball", "800+ Lines Special", "Calculator", "ToDo List", "Map Gen", "Matrix", "FakeLogGen", "SysMonitor", "ClockV2", "ASCII Animations", "Update"}
+		programs := []func(){main1, main2, main3, main4, main5, main6, main7, main8, main9, main10, main11, main12, main13, main14, main15, main16, main17, main18, main19, update}
+		names := []string{"NumberChecker", "GradeChecker", "UnitConverter", "Number2Bar", "CoinFlip", "Countdown", "Timer", "Clock", "Magic 8-Ball", "800+ Lines Special", "Calculator", "ToDo List", "Map Gen", "Matrix", "FakeLogGen", "SysMonitor", "ClockV2", "ASCII Animations", "SimpleChat", "Update"}
 		fmt.Println(welcometext)
 		fmt.Println(strings.Repeat("-", 6) + "You are on V" + localVersion + strings.Repeat("-", 6))
 		fmt.Println("What do you want to run?")
