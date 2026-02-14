@@ -5,7 +5,7 @@ git add .
 echo "Making Commit"
 git commit -m "Update: $VERSION" || echo "Nothing to commit"
 echo "Pushing"
-git push origin main
+git push origin main --force
 gh release create "$VERSION" \
   build/Linux/SimpleApps \
   build/Windows/SimpleApps.exe \
