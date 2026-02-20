@@ -1,8 +1,8 @@
 # SimpleApps
 
 ![Go](https://img.shields.io/badge/Go-1.18+-00ADD8?style=flat&logo=go&logoColor=white)
-![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-informational?style=flat)
-![License](https://img.shields.io/github/license/Luis-Harz/SimpleApps?style=flat)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-informational)
+![License](https://img.shields.io/badge/license-MIT-green?style=flat)
 ![Repo Size](https://img.shields.io/github/repo-size/Luis-Harz/SimpleApps?style=flat)
 ![Last Commit](https://img.shields.io/github/last-commit/Luis-Harz/SimpleApps?style=flat)
 
