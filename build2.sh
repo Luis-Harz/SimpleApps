@@ -15,7 +15,7 @@ BUILD_DIR = os.path.join(PROJECT_ROOT, "build")
 FOR_SERVER_DIR = os.path.join(BUILD_DIR, "ForServer")
 CMD_PATH = os.path.join(BUILD_DIR, "cmd")
 # ==== SFTP CONFIG ====
-SFTP_HOST = "192.168.178.127"
+SFTP_HOST = "100.101.119.31"
 SFTP_USER = "luis"
 SFTP_REMOTE_DIR = "/home/luis/SimpleApps"
 SFTP_PORT = 22
