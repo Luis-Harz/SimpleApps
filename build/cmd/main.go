@@ -1934,6 +1934,16 @@ type Config struct {
 	Prompt   string `json:"prompt"`
 }
 
+func version() string {
+	data, err := os.ReadFile("version.txt")
+	if err != nil {
+		fmt.Println("Error reading local version:", err)
+		time.Sleep(2 * time.Second)
+	}
+	localVersion := strings.TrimSpace(string(data))
+	return localVersion
+}
+
 func configure() {
 	configFile := "config.json"
 	data, err := os.ReadFile(configFile)
@@ -1978,6 +1988,8 @@ func saveConfig(filename string, cfg Config) {
 //END Config
 
 func menu() {
+	programs := []func(){main1, main2, main3, main4, main5, main6, main7, main8, main9, main10, main11, main12, main13, main14, main15, main16, main17, main18, main19, main20, update}
+	names := []string{"NumberChecker", "GradeChecker", "UnitConverter", "Number2Bar", "CoinFlip", "Countdown", "Timer", "Clock", "Magic 8-Ball", "800+ Lines Special", "Calculator", "ToDo List", "Map Gen", "Matrix", "FakeLogGen", "SysMonitor", "ClockV2", "ASCII Animations", "SimpleChat", "PasswordGen", "Update"}
 	rand.Seed(time.Now().UnixNano())
 	configure()
 	data, err := os.ReadFile("version.txt")
@@ -1987,46 +1999,63 @@ func menu() {
 		return
 	}
 	localVersion := strings.TrimSpace(string(data))
-	for {
-		clear()
-		welcometext := "----Welcome to SimpleApps----"
-		minuses := (len(welcometext) / 2) - (len(" Bye! ") / 2)
-		programs := []func(){main1, main2, main3, main4, main5, main6, main7, main8, main9, main10, main11, main12, main13, main14, main15, main16, main17, main18, main19, main20, update}
-		names := []string{"NumberChecker", "GradeChecker", "UnitConverter", "Number2Bar", "CoinFlip", "Countdown", "Timer", "Clock", "Magic 8-Ball", "800+ Lines Special", "Calculator", "ToDo List", "Map Gen", "Matrix", "FakeLogGen", "SysMonitor", "ClockV2", "ASCII Animations", "SimpleChat", "PasswordGen", "Update"}
-		fmt.Println(welcometext)
-		fmt.Println(strings.Repeat("-", 6) + "You are on V" + localVersion + strings.Repeat("-", 6))
-		fmt.Println("What do you want to run?")
-		for i, name := range names {
-			fmt.Printf("[%d] %s\n", i, name)
-		}
-		fmt.Printf("[%d] Exit\n", len(programs))
-		fmt.Printf("%s ", config.Prompt)
-		var input string
-		fmt.Scanln(&input)
-
-		if input == "exit" {
-			fmt.Println(strings.Repeat("-", minuses), "Bye!", strings.Repeat("-", minuses))
-			time.Sleep(3 * time.Second)
-			clear()
-			break
-		}
-
-		choice, err := strconv.Atoi(input)
-		if err != nil {
-			fmt.Println("Invalid choice, try again!")
-			continue
-		}
-
-		if choice == len(programs) {
-			fmt.Println(strings.Repeat("-", minuses), "Bye!", strings.Repeat("-", minuses))
-			time.Sleep(3 * time.Second)
-			clear()
-			break
-		} else if choice >= 0 && choice < len(programs) {
-			programs[choice]()
+	if len(os.Args) > 1 {
+		arg := os.Args[1]
+		if arg == "help" {
+			fmt.Println("--Tools--")
+			for i := 0; i < len(names); i++ {
+				fmt.Printf(" [%d] %s\n", i, names[i])
+			}
 		} else {
-			fmt.Println("Invalid choice, try again!")
+			argint, err := strconv.Atoi(arg)
+			if err != nil {
+				fmt.Print("Tool not found. Type 'help' to show all tools")
+			} else {
+				if argint > -1 && argint < len(programs)+1 {
+					programs[argint]()
+				}
+			}
+		}
+	} else {
+		for {
 			clear()
+			welcometext := "----Welcome to SimpleApps----"
+			minuses := (len(welcometext) / 2) - (len(" Bye! ") / 2)
+			fmt.Println(welcometext)
+			fmt.Println(strings.Repeat("-", 6) + "You are on V" + localVersion + strings.Repeat("-", 6))
+			fmt.Println("What do you want to run?")
+			for i, name := range names {
+				fmt.Printf("[%d] %s\n", i, name)
+			}
+			fmt.Printf("[%d] Exit\n", len(programs))
+			fmt.Printf("%s ", config.Prompt)
+			var input string
+			fmt.Scanln(&input)
+
+			if input == "exit" {
+				fmt.Println(strings.Repeat("-", minuses), "Bye!", strings.Repeat("-", minuses))
+				time.Sleep(3 * time.Second)
+				clear()
+				break
+			}
+
+			choice, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Println("Invalid choice, try again!")
+				continue
+			}
+
+			if choice == len(programs) {
+				fmt.Println(strings.Repeat("-", minuses), "Bye!", strings.Repeat("-", minuses))
+				time.Sleep(3 * time.Second)
+				clear()
+				break
+			} else if choice >= 0 && choice < len(programs) {
+				programs[choice]()
+			} else {
+				fmt.Println("Invalid choice, try again!")
+				clear()
+			}
 		}
 	}
 }
