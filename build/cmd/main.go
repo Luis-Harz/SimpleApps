@@ -22,6 +22,13 @@ import (
 	"golang.org/x/term"
 )
 
+var scanner = bufio.NewScanner(os.Stdin)
+
+func readInput() string {
+	scanner.Scan()
+	return strings.TrimSpace(scanner.Text())
+}
+
 var filetodownload string = ""
 var serverurl string = "simplemirror.bolucraft.uk/ForServer"
 var config Config
@@ -1057,14 +1064,16 @@ func loadTodos() []Todo {
 func saveTodos(todos []Todo) {
 	outFile, err := os.Create("todos.json")
 	if err != nil {
-		panic(err)
+		fmt.Println("Error:", err)
+		return
 	}
 	defer outFile.Close()
 
 	encoder := json.NewEncoder(outFile)
 	encoder.SetIndent("", "  ")
 	if err := encoder.Encode(todos); err != nil {
-		panic(err)
+		fmt.Println("Error:", err)
+		return
 	}
 }
 
@@ -1165,7 +1174,8 @@ func main13() {
 		}
 		inputint, err := strconv.Atoi(input)
 		if err != nil {
-			panic(err)
+			fmt.Println("Error:", err)
+			return
 		}
 		if inputint == 0 {
 			var mapped string
@@ -1188,7 +1198,8 @@ func main13() {
 			filename = filename + ".map"
 			err = os.WriteFile(filename, []byte(mapped), 0644)
 			if err != nil {
-				panic(err)
+				fmt.Println("Error:", err)
+				return
 			}
 			fmt.Print("Saved!")
 			time.Sleep(3 * time.Second)
@@ -1201,12 +1212,15 @@ func main13() {
 			filename = filename + ".map"
 			data, err := os.ReadFile(filename)
 			if err != nil {
-				panic(err)
+				fmt.Println("Error:", err)
+				return
 			}
 			content := string(data)
 			lines := strings.SplitN(content, "\n", 2)
 			if len(lines) < 2 {
-				panic("Invalid map file")
+				fmt.Println("Invalid map file")
+				time.Sleep(2 * time.Second)
+				return
 			}
 			var mapWidth, mapHeight int
 			fmt.Sscanf(lines[0], "%d %d", &mapWidth, &mapHeight)
@@ -1589,7 +1603,8 @@ func main18() {
 			} else if animationmode == 2 {
 				width, _, err := term.GetSize(int(os.Stdout.Fd()))
 				if err != nil {
-					panic(err)
+					fmt.Println("Error:", err)
+					return
 				}
 				var length int
 				var mode int
@@ -1625,7 +1640,8 @@ func main18() {
 				clear()
 				width, _, err := term.GetSize(int(os.Stdout.Fd()))
 				if err != nil {
-					panic(err)
+					fmt.Println("Error:", err)
+					return
 				}
 				heights := []int{0, 0, 0, 0, 0}
 				for animationmode == 3 {
@@ -1651,7 +1667,8 @@ func main18() {
 			} else if animationmode == 4 {
 				width, height, err := term.GetSize(int(os.Stdout.Fd()))
 				if err != nil {
-					panic(err)
+					fmt.Println("Error:", err)
+					return
 				}
 
 				heights := make([]int, height)
@@ -1797,6 +1814,120 @@ func main19() {
 	fmt.Println("Client Closed.")
 }
 
+// Help Functions main20
+func printenabledletters(enabled []string, names []string) {
+	lines := len(enabled)
+	var itemenabled string
+	for i := 0; i < lines; i++ {
+		if enabled[i] == "1" {
+			itemenabled = "X"
+		} else {
+			itemenabled = " "
+		}
+		fmt.Println("[" + strconv.Itoa(i) + "]" + "[" + itemenabled + "] " + names[i])
+	}
+}
+
+func setvariablesletters(numbersenabled bool, lettersupperenabled bool, letterslowerenabled bool, lettersspecialenabled bool) []string {
+	enabled := make([]string, 4)
+	if numbersenabled == true {
+		enabled[0] = "1"
+	} else if numbersenabled == false {
+		enabled[0] = "0"
+	}
+	if lettersupperenabled == true {
+		enabled[1] = "1"
+	} else if lettersupperenabled == false {
+		enabled[1] = "0"
+	}
+	if letterslowerenabled == true {
+		enabled[2] = "1"
+	} else if letterslowerenabled == false {
+		enabled[2] = "0"
+	}
+	if lettersspecialenabled == true {
+		enabled[3] = "1"
+	} else if lettersspecialenabled == false {
+		enabled[3] = "0"
+	}
+	return enabled
+}
+func combinelists(enabled []string, list1, list2, list3, list4 []string) []string {
+	allLists := [][]string{list1, list2, list3, list4}
+	var listscombined []string
+	for i := 0; i < len(enabled) && i < len(allLists); i++ {
+		if enabled[i] == "1" {
+			listscombined = append(listscombined, allLists[i]...)
+		}
+	}
+	return listscombined
+}
+
+//END Help Functions main20
+
+func main20() {
+	welcometext := "----Welcome to PasswordGen----"
+	minuses := (len(welcometext) / 2) - (len(" Bye! ") / 2)
+	names := []string{"Numbers", "Upper Letters", "Lower Letters", "Special Letters"}
+	numbers := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
+	lettersupper := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+	letterslower := []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+	lettersspecial := []string{"!", "?"}
+	enabled0 := true
+	enabled1 := true
+	enabled2 := true
+	enabled3 := false
+	enabled := setvariablesletters(enabled0, enabled1, enabled2, enabled3)
+	for {
+		clear()
+		fmt.Println(welcometext)
+		printenabledletters(enabled, names)
+		fmt.Println("[toggle by using numbers or type 'gen' to generate or type 'exit' to exit]")
+		fmt.Print(config.Prompt + " ")
+		input := readInput()
+		if input == "0" {
+			enabled0 = !enabled0
+			enabled = setvariablesletters(enabled0, enabled1, enabled2, enabled3)
+		} else if input == "1" {
+			enabled1 = !enabled1
+			enabled = setvariablesletters(enabled0, enabled1, enabled2, enabled3)
+		} else if input == "2" {
+			enabled2 = !enabled2
+			enabled = setvariablesletters(enabled0, enabled1, enabled2, enabled3)
+		} else if input == "3" {
+			enabled3 = !enabled3
+			enabled = setvariablesletters(enabled0, enabled1, enabled2, enabled3)
+		} else if input == "gen" {
+			combinedlists := combinelists(enabled, numbers, lettersupper, letterslower, lettersspecial)
+			fmt.Println("[Type the length]")
+			fmt.Print(config.Prompt + " ")
+			input2 := readInput()
+			input2int, err := strconv.Atoi(input2)
+			if err != nil {
+				panic(err)
+			}
+			var allletters string
+			for i := 0; i < input2int; i++ {
+				letter := combinedlists[random(0, len(combinedlists)-1)]
+				allletters += letter
+			}
+			fmt.Println("Password: " + allletters)
+			time.Sleep(time.Second * 5)
+		} else if input == "help" {
+			fmt.Println("---Commands---\n 0\n 1\n 2\n 3\n gen\n exit\n help")
+			time.Sleep(time.Second * 2)
+		} else if input == "exit" {
+			fmt.Println(strings.Repeat("-", minuses), "Bye!", strings.Repeat("-", minuses))
+			time.Sleep(3 * time.Second)
+			clear()
+			break
+		} else {
+			fmt.Println("Command Not Found. Type 'help' to see all commands")
+			time.Sleep(time.Second * 2)
+		}
+	}
+}
+
 // START Config
 type Config struct {
 	FirstRun bool   `json:"first_run"`
@@ -1860,8 +1991,8 @@ func menu() {
 		clear()
 		welcometext := "----Welcome to SimpleApps----"
 		minuses := (len(welcometext) / 2) - (len(" Bye! ") / 2)
-		programs := []func(){main1, main2, main3, main4, main5, main6, main7, main8, main9, main10, main11, main12, main13, main14, main15, main16, main17, main18, main19, update}
-		names := []string{"NumberChecker", "GradeChecker", "UnitConverter", "Number2Bar", "CoinFlip", "Countdown", "Timer", "Clock", "Magic 8-Ball", "800+ Lines Special", "Calculator", "ToDo List", "Map Gen", "Matrix", "FakeLogGen", "SysMonitor", "ClockV2", "ASCII Animations", "SimpleChat", "Update"}
+		programs := []func(){main1, main2, main3, main4, main5, main6, main7, main8, main9, main10, main11, main12, main13, main14, main15, main16, main17, main18, main19, main20, update}
+		names := []string{"NumberChecker", "GradeChecker", "UnitConverter", "Number2Bar", "CoinFlip", "Countdown", "Timer", "Clock", "Magic 8-Ball", "800+ Lines Special", "Calculator", "ToDo List", "Map Gen", "Matrix", "FakeLogGen", "SysMonitor", "ClockV2", "ASCII Animations", "SimpleChat", "PasswordGen", "Update"}
 		fmt.Println(welcometext)
 		fmt.Println(strings.Repeat("-", 6) + "You are on V" + localVersion + strings.Repeat("-", 6))
 		fmt.Println("What do you want to run?")
