@@ -1,5 +1,5 @@
 # SimpleApps
-
+![GitHub Repo stars](https://img.shields.io/github/stars/Luis-Harz/SimpleApps)
 ![Go](https://img.shields.io/badge/Go-1.18+-00ADD8?style=flat&logo=go&logoColor=white)
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-informational)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat)
