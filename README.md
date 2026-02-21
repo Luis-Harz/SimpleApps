@@ -78,7 +78,7 @@ Download the Zip extract it and run
 ./Permanent.sh
 ```
 ---
-## SimpleChat Server
+### SimpleChat Server
 You can host your own SimpleChat Server by download the files <a href="https://github.com/Luis-Harz/SimpleApps/tree/main/Chat">here</a>
 ---
 ## Contributing
