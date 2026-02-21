@@ -80,7 +80,7 @@ Download the Zip extract it and run
 ---
 ### SimpleChat Server
 You can host your own SimpleChat Server by download the files <a href="https://github.com/Luis-Harz/SimpleApps/tree/main/Chat">here</a>
----
+
 ## Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
