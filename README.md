@@ -71,6 +71,12 @@ chmod +x SimpleApps
 
 > **Note:** SimpleApps requires a terminal of at least **70 columns × 23 rows**. You'll get a warning on startup if your terminal is too small.
 
+### Or Permanently install(Linux)
+Download the Zip extract it and run
+
+```bash
+./Permanent.sh
+```
 ---
 
 ## Contributing
