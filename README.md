@@ -62,7 +62,7 @@ go build -o SimpleApps.exe .
 
 ### Or download a release
 
-Pre-built binaries are available on the [Releases](https://github.com/yourusername/SimpleApps/releases) page. Download the binary for your platform, make it executable (Linux/macOS), and run it.
+Pre-built binaries are available on the [Releases](https://github.com/yourusername/SimpleApps/releases) page. Download the binary for your platform, make it executable (Linux/macOS), and run it. Make sure you also download the latest version.txt!
 
 ```bash
 chmod +x SimpleApps
