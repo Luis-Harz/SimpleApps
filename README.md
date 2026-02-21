@@ -50,7 +50,7 @@ You can also launch any tool directly by passing its number as a CLI argument (e
 ### Build from source
 
 ```bash
-git clone https://github.com/yourusername/SimpleApps.git
+git clone https://github.com/Luis-Harz/SimpleApps.git
 cd SimpleApps
 go build -o SimpleApps .
 ```
@@ -62,7 +62,7 @@ go build -o SimpleApps.exe .
 
 ### Or download a release
 
-Pre-built binaries are available on the [Releases](https://github.com/yourusername/SimpleApps/releases) page. Download the binary for your platform, make it executable (Linux/macOS), and run it. Make sure you also download the latest version.txt!
+Pre-built binaries are available on the [Releases](https://github.com/Luis-Harz/SimpleApps/releases) page. Download the binary for your platform, make it executable (Linux/macOS), and run it. Make sure you also download the latest version.txt!
 
 ```bash
 chmod +x SimpleApps
@@ -78,7 +78,9 @@ Download the Zip extract it and run
 ./Permanent.sh
 ```
 ---
-
+## SimpleChat Server
+You can host your own SimpleChat Server by download the files <a href="https://github.com/Luis-Harz/SimpleApps/tree/main/Chat">here</a>
+---
 ## Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
