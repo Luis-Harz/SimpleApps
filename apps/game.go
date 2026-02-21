@@ -21,9 +21,7 @@ func Main22() {
 	fmt.Printf("%s ", ConfigData.Prompt)
 	input := ReadInput()
 	fmt.Println("Press Arrowkeys to move")
-	if len(input) > 1 {
-		editedinput = input[0]
-	}
+	editedinput = input[0]
 	game(string(editedinput))
 }
 
