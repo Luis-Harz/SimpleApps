@@ -36,6 +36,8 @@ SimpleApps ships with 20 built-in tools accessible from a single menu:
 | 17 | **ASCII Animations** | Auto-cycling collection of terminal animations |
 | 18 | **SimpleChat** | WebSocket-based chat client |
 | 19 | **PasswordGen** | Configurable random password generator |
+| 20 | **SimpleFiles** | Terminal based File Explorer |
+| 21 | **Game** | Simple Arrow Key movement(not exactly a game) |
 
 You can also launch any tool directly by passing its number as a CLI argument (e.g. `./SimpleApps 10`).
 
