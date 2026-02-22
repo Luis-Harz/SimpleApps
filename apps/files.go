@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"reflect"
+
+	//"reflect"
 
 	//"strconv"
 	"strings"
@@ -90,17 +91,24 @@ func drawnano(y int, x int) {
 
 func showfilecontentnano(file string) {
 	Clear()
-	printfile(readfile(file))
-}
-func showfilecontentnanopre(content []string) []string {
-	Clear()
-	aftercontent := []string{}
-	for i := 0; i < len(content); i++ {
-		fmt.Println(content[i])
-		aftercontent = append(aftercontent, content[i])
+	//printfile(readfile(file))
+	lines := readfile(file)
+	for i := minline; i < maxline; i++ {
+		fmt.Println(lines[i])
 	}
-	drawnano(y, x)
-	return aftercontent
+}
+
+func showfilecontentnanopre(content []string) {
+	Clear()
+	_, height, _ := term.GetSize(int(os.Stdout.Fd()))
+	windowSize := height - 1
+	for i := 0; i < windowSize; i++ {
+		lineIndex := minline + i
+		if lineIndex < len(content) {
+			fmt.Println(content[lineIndex])
+		}
+	}
+	drawnano(cursorY+1, x)
 }
 
 var x int
@@ -113,113 +121,168 @@ func savefilenano(lines []string, file string, tty tty.TTY) {
 		tty.Close()
 		ttyClosed = true
 	}
-	fileafter := showfilecontentnanopre(lines)
-	if !reflect.DeepEqual(filebefore, fileafter) {
-		for {
-			Clear()
-			fmt.Println("Do you want to save?")
-			fmt.Printf("%s ", ConfigData.Prompt)
-			input := ReadInput()
-			if input == "y" {
-				saveFile(lines, file)
-				break
-			} else if input == "n" {
-				return
-			} else {
-				continue
-			}
+	//fileafter := showfilecontentnanopre(lines)
+	//if !reflect.DeepEqual(filebefore, fileafter) {
+	for {
+		Clear()
+		fmt.Println("Do you want to save?")
+		fmt.Printf("%s ", ConfigData.Prompt)
+		input := ReadInput()
+		if input == "y" {
+			saveFile(lines, file)
+			break
+		} else if input == "n" {
+			return
+		} else {
+			continue
 		}
+		//}
 	}
 }
 
+func showfilewindow(lines []string) {
+	Clear()
+	_, height, _ := term.GetSize(int(os.Stdout.Fd()))
+	windowSize := height - 1
+	for i := 0; i < windowSize; i++ {
+		idx := minline + i
+		if idx < len(lines) {
+			fmt.Println(lines[idx])
+		} else {
+			fmt.Println()
+		}
+	}
+	drawnano(cursorY+1, x)
+}
+
 func nano(file string) {
-	showfilecontentnano(file)
 	lines := readfile(file)
-	filebefore = readfile(file)
+	if len(lines) == 0 {
+		lines = append(lines, "")
+	}
+	filebefore = append([]string{}, lines...)
+	_, height, _ := term.GetSize(int(os.Stdout.Fd()))
+	windowSize := height - 1
+	minline = 0
+	cursorY = 0
 	x = 1
-	y = 1
+
 	tty, err := tty.Open()
 	if err != nil {
 		showerror(err.Error())
+		return
 	}
-	defer func() {
-		if !ttyClosed {
-			tty.Close()
-			ttyClosed = true
-		}
-	}()
 	for {
-		drawnano(y, x)
-		r, err := tty.ReadRune()
-		if err != nil {
-
-			showerror(err.Error())
+		showfilewindow(lines)
+		drawnano(cursorY+1, x)
+		r, _ := tty.ReadRune()
+		curIndex := minline + cursorY
+		if curIndex >= len(lines) {
+			lines = append(lines, "")
 		}
 
 		switch r {
 		case 0x08, 0x7f:
-			if x > 1 {
+			line := lines[curIndex]
+			if x > 1 && len(line) >= x-1 {
+				lines[curIndex] = line[:x-1] + line[x:]
 				x--
-				lines[y-1] = lines[y-1][:x-1] + lines[y-1][x:]
-				//saveFile(lines, file)
-				//showfilecontentnano(file)
-				showfilecontentnanopre(lines)
+			} else if x == 1 && curIndex > 0 {
+				prev := lines[curIndex-1]
+				lines[curIndex-1] = prev + line
+				lines = append(lines[:curIndex], lines[curIndex+1:]...)
+				if cursorY > 0 {
+					cursorY--
+				} else if minline > 0 {
+					minline--
+				}
+				x = len(prev) + 1
 			}
+
 		case 27:
-			seq := make([]rune, 2)
-			for i := 0; i < 2; i++ {
-				seq[i], _ = tty.ReadRune()
-			}
+			seq := []rune{0, 0}
+			seq[0], _ = tty.ReadRune()
+			seq[1], _ = tty.ReadRune()
 			if seq[0] == '[' {
 				switch seq[1] {
 				case 'A':
-					if y > 1 {
-						y--
+					if cursorY > 0 {
+						cursorY--
+					} else if minline > 0 {
+						minline--
+					}
+					if x > len(lines[minline+cursorY])+1 {
+						x = len(lines[minline+cursorY]) + 1
 					}
 				case 'B':
-					if y < len(lines) {
-						y++
+					if cursorY < windowSize-1 && minline+cursorY < len(lines)-1 {
+						cursorY++
+					} else if minline+windowSize < len(lines) {
+						minline++
+					}
+					if x > len(lines[minline+cursorY])+1 {
+						x = len(lines[minline+cursorY]) + 1
 					}
 				case 'C':
-					if x < (len(lines[(y-1)]) + 1) {
+					if x <= len(lines[curIndex]) {
 						x++
-					} else if y < len(lines) {
+					} else if curIndex < len(lines)-1 {
 						x = 1
-						y++
+						if cursorY < windowSize-1 {
+							cursorY++
+						} else {
+							minline++
+						}
 					}
 				case 'D':
 					if x > 1 {
 						x--
-					} else if y > 1 {
-						y--
-						x = len(lines[y-1]) + 1
+					} else if curIndex > 0 {
+						cursorY--
+						if cursorY < 0 {
+							minline--
+							cursorY = 0
+						}
+						x = len(lines[minline+cursorY]) + 1
 					}
 				}
 			}
+
 		case '\r', '\n':
+			line := lines[curIndex]
 			newLine := ""
-			if x <= len(lines[y-1]) {
-				newLine = lines[y-1][x-1:]
-				lines[y-1] = lines[y-1][:x-1]
+			if x <= len(line) {
+				newLine = line[x-1:]
+				lines[curIndex] = line[:x-1]
 			}
-			lines = append(lines[:y], append([]string{newLine}, lines[y:]...)...)
-			y++
+			lines = append(lines[:curIndex+1], append([]string{newLine}, lines[curIndex+1:]...)...)
+			if cursorY < windowSize-1 {
+				cursorY++
+			} else {
+				minline++
+			}
 			x = 1
-			showfilecontentnanopre(lines)
+
 		case 'q':
 			savefilenano(lines, file, *tty)
 			return
+
 		default:
-			if x > len(lines[y-1]) {
-				lines[y-1] += string(r)
+			line := lines[curIndex]
+			if x > len(line) {
+				line += string(r)
 			} else {
-				lines[y-1] = lines[y-1][:x-1] + string(r) + lines[y-1][x-1:]
+				line = line[:x-1] + string(r) + line[x-1:]
 			}
+			lines[curIndex] = line
 			x++
-			showfilecontentnanopre(lines)
 		}
 	}
 }
+
+var minline int = 0
+var maxline int
+var cursorY int = 0
 
 func Main21() {
 	Clear()
