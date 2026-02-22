@@ -172,6 +172,7 @@ func nano(file string) {
 		showerror(err.Error())
 		return
 	}
+
 	for {
 		showfilewindow(lines)
 		drawnano(cursorY+1, x)
@@ -180,12 +181,12 @@ func nano(file string) {
 		if curIndex >= len(lines) {
 			lines = append(lines, "")
 		}
+		line := lines[curIndex]
 
 		switch r {
 		case 0x08, 0x7f:
-			line := lines[curIndex]
-			if x > 1 && len(line) >= x-1 {
-				lines[curIndex] = line[:x-1] + line[x:]
+			if x > 1 && x-1 <= len(line) {
+				lines[curIndex] = line[:x-2] + line[x-1:]
 				x--
 			} else if x == 1 && curIndex > 0 {
 				prev := lines[curIndex-1]
@@ -198,7 +199,6 @@ func nano(file string) {
 				}
 				x = len(prev) + 1
 			}
-
 		case 27:
 			seq := []rune{0, 0}
 			seq[0], _ = tty.ReadRune()
@@ -247,9 +247,7 @@ func nano(file string) {
 					}
 				}
 			}
-
 		case '\r', '\n':
-			line := lines[curIndex]
 			newLine := ""
 			if x <= len(line) {
 				newLine = line[x-1:]
@@ -262,13 +260,10 @@ func nano(file string) {
 				minline++
 			}
 			x = 1
-
 		case 'q':
 			savefilenano(lines, file, *tty)
 			return
-
 		default:
-			line := lines[curIndex]
 			if x > len(line) {
 				line += string(r)
 			} else {
