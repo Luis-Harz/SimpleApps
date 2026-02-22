@@ -194,6 +194,19 @@ var Digits2 = map[rune]string{
 
 //END
 
+var minusesname int
+
+func Greet(name string) {
+	minusesname = (len(name) / 2) - (len(" Bye! ") / 2)
+	fmt.Println("----Welcome to " + name + "----")
+}
+
+func Bye() {
+	fmt.Println(strings.Repeat("-", minusesname), "Bye!", strings.Repeat("-", minusesname))
+	time.Sleep(3 * time.Second)
+	Clear()
+}
+
 // Random Number
 func Random(minimum int, maximum int) int {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))

@@ -1,0 +1,71 @@
+func nano(file string) {
+	Clear()
+	for {
+		lines := readfile(file)
+		fmt.Printf("[%s; %d Lines]%s ", file, len(lines), ConfigData.Prompt)
+		input := ReadInput()
+		parts := strings.Fields(input)
+		if len(parts) == 0 {
+			continue
+		}
+
+		command := parts[0]
+		argument := ""
+		if len(parts) > 1 {
+			argument = parts[1]
+		}
+		if command == "exit" {
+			break
+		} else if command == "help" {
+			Clear()
+			commands := []string{"file show", "file edit", "help", "clear", "exit"}
+			meanings := []string{
+				"Show file content",
+				"Edit file",
+				"Show all commands",
+				"clears Terminal",
+				"Exit editor",
+			}
+			var lines []string
+			lines = append(lines, "--- Commands ---")
+			for i := 0; i < len(commands); i++ {
+				lines = append(lines,
+					fmt.Sprintf(" [%d] %s; %s", i, commands[i], meanings[i]),
+				)
+			}
+
+			showHelp(lines)
+			time.Sleep(time.Second * 3)
+		} else if command == "file" && argument != "" {
+			if argument == "show" {
+				printfile(lines)
+			} else if argument == "edit" {
+				fmt.Println("Line: ")
+				fmt.Printf("%s ", ConfigData.Prompt)
+				input := ReadInput()
+				line, err := strconv.Atoi(input)
+				if err != nil {
+					fmt.Println(err)
+					time.Sleep(time.Second * 2)
+					continue
+				}
+				fmt.Println("Content: ")
+				fmt.Printf("%s ", ConfigData.Prompt)
+				input = ReadInput()
+				for len(lines) <= line {
+					lines = append(lines, "")
+				}
+				lines[line] = input
+				saveFile(lines, file)
+			} else {
+				showerror("Invalid Argument!")
+				time.Sleep(time.Second)
+			}
+		} else if command == "clear" {
+			Clear()
+		} else {
+			showerror("Command not found!")
+			time.Sleep(time.Second)
+		}
+	}
+}
