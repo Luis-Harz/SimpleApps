@@ -12,7 +12,7 @@ A collection of simple, fun terminal tools written in Go — all bundled into on
 
 ## Features
 
-SimpleApps ships with 20 built-in tools accessible from a single menu:
+SimpleApps ships with 22 built-in tools accessible from a single menu:
 
 | # | Tool | Description |
 |---|------|-------------|
