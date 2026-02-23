@@ -13,8 +13,8 @@ import (
 )
 
 func menu() {
-	programs := []func(){apps.Main1, apps.Main2, apps.Main3, apps.Main4, apps.Main5, apps.Main6, apps.Main7, apps.Main8, apps.Main9, apps.Main10, apps.Main11, apps.Main12, apps.Main13, apps.Main14, apps.Main15, apps.Main16, apps.Main17, apps.Main18, apps.Main19, apps.Main20, apps.Main21, apps.Main22, apps.Update}
-	names := []string{"NumberChecker", "GradeChecker", "UnitConverter", "Number2Bar", "CoinFlip", "Countdown", "Timer", "Clock", "Magic 8-Ball", "800+ Lines Special", "Calculator", "ToDo List", "Map Gen", "Matrix", "FakeLogGen", "SysMonitor", "ClockV2", "ASCII Animations", "SimpleChat", "PasswordGen", "SimpleFiles", "Game", "Update"}
+	programs := []func(){apps.Main1, apps.Main2, apps.Main3, apps.Main4, apps.Main5, apps.Main6, apps.Main7, apps.Main8, apps.Main9, apps.Main10, apps.Main11, apps.Main12, apps.Main13, apps.Main14, apps.Main15, apps.Main16, apps.Main17, apps.Main18, apps.Main19, apps.Main20, apps.Main21, apps.Main22, apps.Main23, apps.Update}
+	names := []string{"NumberChecker", "GradeChecker", "UnitConverter", "Number2Bar", "CoinFlip", "Countdown", "Timer", "Clock", "Magic 8-Ball", "800+ Lines Special", "Calculator", "ToDo List", "Map Gen", "Matrix", "FakeLogGen", "SysMonitor", "ClockV2", "ASCII Animations", "SimpleChat", "PasswordGen", "SimpleFiles", "Game", "SimpleClick", "Update"}
 	rand.Seed(time.Now().UnixNano())
 	apps.Configure()
 	data, err := os.ReadFile("version.txt")
