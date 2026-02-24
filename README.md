@@ -100,6 +100,9 @@ Please keep new tools consistent with the existing style — interactive, termin
 
 ---
 
+## Credits
+New Icon made by <a href="https://github.com/Gustaf2580">Gustaf2580</a> <br>
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
