@@ -111,9 +111,9 @@ func showfilecontentnanopre(content []string) {
 	drawnano(cursorY+1, x)
 }
 
-var x int
-var y int
-var filebefore []string
+var x int = 1
+var y int = 1
+var filebefore []string = []string{}
 var ttyClosed bool = false
 
 func savefilenano(lines []string, file string, tty tty.TTY) {

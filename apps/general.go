@@ -202,6 +202,10 @@ func Greet(name string) {
 	fmt.Println(text)
 }
 
+func Warn(warning string) {
+	fmt.Println("[WARNING]: " + warning)
+}
+
 func Bye() {
 	fmt.Println(strings.Repeat("-", minusesname), "Bye!", strings.Repeat("-", minusesname))
 	time.Sleep(3 * time.Second)

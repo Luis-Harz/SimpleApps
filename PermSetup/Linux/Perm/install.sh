@@ -2,6 +2,7 @@
 echo "----SimpleApps Permanent----"
 echo "Press ENTER to start"
 read
+cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 echo "This program includes st as bundled Terminal it's under the MIT License"
 echo "Terminal LICENSE START"
 cat Terminal-LC
@@ -11,7 +12,7 @@ echo "Making Directory..."
 sudo mkdir -p /opt/simpleapps
 mkdir -p ~/.local/share/applications
 echo "Copying Files..."
-sudo cp ../Terminal /opt/simpleapps/
+sudo cp ./* /opt/simpleapps/
 sudo rsync -av --exclude 'Perm' ../ /opt/simpleapps/
 echo "Making Symlinks"
 sudo ln -sf /opt/simpleapps/wrapper.sh /usr/bin/simpleapps
