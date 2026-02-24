@@ -12,7 +12,13 @@ func Main23() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Press ENTER to start")
 	for {
-		reader.ReadString('\n')
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println(err)
+		}
+		if input == "q" {
+			return
+		}
 		fmt.Print("\033[2J\033[H")
 		resp, err := http.Post("https://simpleclick.bolucraft.uk/click", "text/plain", nil)
 		if err != nil {

@@ -12,7 +12,7 @@ A collection of simple, fun terminal tools written in Go — all bundled into on
 
 ## Features
 
-SimpleApps ships with 22 built-in tools accessible from a single menu:
+SimpleApps ships with 24 built-in tools accessible from a single menu:
 
 | # | Tool | Description |
 |---|------|-------------|
@@ -38,7 +38,8 @@ SimpleApps ships with 22 built-in tools accessible from a single menu:
 | 19 | **PasswordGen** | Configurable random password generator |
 | 20 | **SimpleFiles** | Terminal based File Explorer |
 | 21 | **Game** | Simple Arrow Key movement(not exactly a game) |
-
+| 22 | **SimpleClick** | A global counter |
+| 23 | **Wget** | A Wget Client |
 You can also launch any tool directly by passing its number as a CLI argument (e.g. `./SimpleApps 10`).
 
 ---

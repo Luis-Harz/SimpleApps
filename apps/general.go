@@ -197,8 +197,9 @@ var Digits2 = map[rune]string{
 var minusesname int
 
 func Greet(name string) {
-	minusesname = (len(name) / 2) - (len(" Bye! ") / 2)
-	fmt.Println("----Welcome to " + name + "----")
+	text := fmt.Sprint("----Welcome to " + name + "----")
+	minusesname = (len(text) / 2) - (len(" Bye! ") / 2)
+	fmt.Println(text)
 }
 
 func Bye() {
@@ -247,6 +248,15 @@ func typeeffect(ctx context.Context, input string, name string, text string) {
 		}
 	}
 }
+
+// Input Function
+func Input(input string) string {
+	fmt.Println(input)
+	fmt.Printf("%s ", ConfigData.Prompt)
+	return ReadInput()
+}
+
+//END Input Function
 
 // Help Functions main13
 func insertbreakEverywidth(s string, width int) string {
