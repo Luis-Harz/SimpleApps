@@ -40,6 +40,8 @@ SimpleApps ships with 24 built-in tools accessible from a single menu:
 | 21 | **Game** | Simple Arrow Key movement(not exactly a game) |
 | 22 | **SimpleClick** | A global counter |
 | 23 | **Wget** | A Wget Client |
+| 24 | **SimplePic** | Simple "Pictures" with 3 colors |
+
 You can also launch any tool directly by passing its number as a CLI argument (e.g. `./SimpleApps 10`).
 
 ---
