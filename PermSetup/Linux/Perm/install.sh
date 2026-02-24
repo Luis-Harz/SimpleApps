@@ -26,7 +26,7 @@ Name=SimpleApps
 Comment=Run SimpleApps in bundled st terminal
 Exec=/opt/simpleapps/Terminal -e simpleapps
 Icon=/opt/simpleapps/icon.png
-Terminal=true
+Terminal=false
 Categories=Utility;
 EOL
 cp "$DESKTOP_FILE" ~/.local/share/applications/
