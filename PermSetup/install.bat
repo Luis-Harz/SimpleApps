@@ -5,7 +5,7 @@ echo Press ENTER to start
 pause
 
 echo Making Directory...
-mkdir "C:\SimpleApps" /p
+mkdir "C:\SimpleApps"
 
 echo Copying Files...
 xcopy "..\*" "C:\SimpleApps\" /s /e /y
