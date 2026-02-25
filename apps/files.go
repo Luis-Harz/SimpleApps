@@ -6,7 +6,7 @@ import (
 	"os"
 
 	//"reflect"
-
+	"strconv"
 	//"strconv"
 	"strings"
 	"time"
@@ -37,6 +37,7 @@ func showerror(error string) {
 		time.Sleep(time.Second * 2)
 	}
 	fmt.Printf("\033[%d;1H%s\033[%d;1H", (height - 2), error, height)
+	time.Sleep(time.Second * 2)
 }
 
 func listfiles() {
@@ -300,105 +301,90 @@ func Main21() {
 		fmt.Printf("%s ", ConfigData.Prompt)
 		input := ReadInput()
 		parts := strings.Fields(input)
+		var parts2 []string
+		flags := make(map[string]bool)
+		for _, part := range parts {
+			if strings.HasPrefix(part, "-") {
+				flags[part] = true
+			} else {
+				parts2 = append(parts2, part)
+			}
+		}
+		command := parts2[0]
+		args := parts2[1:]
+		recursive := flags["-r"]
 		if len(parts) > 3 {
 			showerror("Command not found!")
 			time.Sleep(time.Second)
 			continue
 		} else {
-			var argument string
-			var command string
-			if len(parts) > 0 {
-				command = parts[0]
-			}
-			if len(parts) > 1 {
-				argument = parts[1]
-			}
-			if len(parts) == 3 && parts[1] == "-r" {
-				recursive = true
-				argument = parts[2]
-				command = parts[0]
-			}
-			if command == "rf" {
-				if recursive == true {
-					os.RemoveAll(argument)
-				} else {
-					err := os.Remove(argument)
-					if err != nil {
-						showerror(err.Error())
-						time.Sleep(time.Second)
-						continue
+			if command == "rm" {
+				if len(args) > 0 {
+					if recursive == true {
+						err := os.RemoveAll(args[0])
+						if err != nil {
+							showerror(err.Error())
+						}
+					} else {
+						err := os.Remove(args[0])
+						if err != nil {
+							showerror(err.Error())
+						}
 					}
+				} else {
+					showerror("No argument given!")
+				}
+			} else if command == "edit" {
+				if len(args) > 0 {
+					nano(args[0])
+				} else {
+					showerror("No file given!")
 				}
 			} else if command == "cf" {
-				file, err := os.Create(argument)
-				if err != nil {
-					showerror("Error: " + err.Error())
-					time.Sleep(time.Second)
-					time.Sleep(2 * time.Second)
-					continue
-				}
-				file.Close()
-			} else if command == "ef" {
-				if argument == "" {
-					showerror("No file specified!")
-					time.Sleep(time.Second * 1)
-					continue
-				}
-				nano(argument)
-			} else if command == "mkd" {
-				os.Mkdir(argument, 0755)
-			} else if command == "cd" {
-				if argument == "" {
-					showerror("No Directory specified")
-					time.Sleep(time.Second)
-					continue
-				}
-				err := os.Chdir(argument)
-				if err != nil {
-					showerror("Error: " + err.Error())
-					time.Sleep(time.Second)
-					time.Sleep(2 * time.Second)
-					continue
-				}
-			} else if command == "rd" {
-				if recursive == true {
-					os.RemoveAll(argument)
-				} else {
-					err := os.Remove(argument)
+				if len(args) > 0 {
+					file, err := os.Create(args[0])
 					if err != nil {
-						fmt.Println(err)
-						time.Sleep(time.Second * 2)
-						continue
+						showerror(err.Error())
 					}
+					file.Close()
+				} else {
+					showerror("No file given!")
 				}
-			} else if command == "exit" {
-				Bye()
-				return
+			} else if command == "mkd" {
+				if len(args) > 0 {
+					if recursive == true {
+						if len(args) > 2 {
+							filemode, err := strconv.Atoi(args[1])
+							if err != nil {
+								showerror(err.Error())
+							}
+							os.MkdirAll(args[0], os.FileMode(filemode))
+						} else {
+							os.MkdirAll(args[0], 0755)
+						}
+					} else {
+						if len(args) > 2 {
+							filemode, err := strconv.Atoi(args[1])
+							if err != nil {
+								showerror(err.Error())
+							}
+							os.Mkdir(args[0], os.FileMode(filemode))
+						} else {
+							os.Mkdir(args[0], 0755)
+						}
+					}
+				} else {
+					showerror("No dir given")
+				}
 			} else if command == "help" {
-
-				commands := []string{"rf", "cf", "ef", "mkd", "cd", "rd"}
-				meanings := []string{
-					"Remove file",
-					"Create file",
-					"Edit file",
-					"Make dir",
-					"Change dir",
-					"Remove dir",
-				}
-
-				var lines []string
-				lines = append(lines, "--- Commands ---")
-
+				commands := []string{"rm", "edit", "cf", "mkd"}
+				functions := []string{"Remove file/dir", "edit file", "create file", "make dir"}
+				functions2 := make([]string, len(commands))
 				for i := 0; i < len(commands); i++ {
-					lines = append(lines,
-						fmt.Sprintf(" [%d] %s; %s", i, commands[i], meanings[i]),
-					)
+					line := fmt.Sprintf("[%d] %s; %s", i, commands[i], functions[i])
+					functions2 = append(functions2, line)
 				}
-
-				showHelp(lines)
-				time.Sleep(time.Second * 3)
-			} else {
-				showerror("Command not found! type 'help' to see all commands!")
+				showHelp(functions2)
 				time.Sleep(time.Second * 2)
 			}
 		}

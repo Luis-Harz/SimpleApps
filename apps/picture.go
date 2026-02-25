@@ -3,6 +3,7 @@ package apps
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	//"strconv"
 	"time"
@@ -205,15 +206,17 @@ func piceditor() {
 var red string = "\033[31m"
 var blue string = "\033[34m"
 var green string = "\033[32m"
+var white string = "\033[37m"
+var black string = "\033[30m"
 var reset string = "\033[0m"
 var newline string = "\n"
 var block string = "██"
-var variables []string = []string{red, green, blue, newline}
+var variables []string = []string{red, green, blue, white, black, newline}
 
 func getpicwidth(picture []int) int {
 	var width int
 	for i := 0; i < len(picture); i++ {
-		if picture[i] != 3 {
+		if picture[i] != len(variables)-1 {
 			continue
 		} else {
 			width = i
@@ -234,7 +237,7 @@ func showpic(picture []int) {
 		time.Sleep(time.Second * 2)
 	} else {
 		for i := 0; i < len(picture); i++ {
-			if picture[i] != 3 {
+			if picture[i] != len(variables)-1 {
 				fmt.Print(variables[picture[i]] + block + reset)
 			} else {
 				fmt.Print(newline)
@@ -256,6 +259,8 @@ func Main25() {
 	} else if input == "1" {
 		filename := Input("File Name:")
 		filecontent, err := os.ReadFile(filename)
+		content := strings.ReplaceAll(string(filecontent), "\r", "")
+		filecontent = []byte(content)
 		if err != nil {
 			showerror(err.Error())
 		}
@@ -263,10 +268,19 @@ func Main25() {
 			Clear()
 			picture := []int{}
 			for i := 0; i < len(filecontent); i++ {
-				if filecontent[i] == '\n' {
-					picture = append(picture, 3)
-				} else {
-					picture = append(picture, int(filecontent[i]-'0'))
+				ch := filecontent[i]
+
+				if ch == '\n' {
+					picture = append(picture, len(variables)-1)
+					continue
+				}
+
+				if ch == '\r' {
+					continue
+				}
+
+				if ch >= '0' && ch <= '9' {
+					picture = append(picture, int(ch-'0'))
 				}
 			}
 			showpic(picture)
