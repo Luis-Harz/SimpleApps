@@ -26,6 +26,7 @@ func menu() {
 	localVersion := strings.TrimSpace(string(data))
 	if len(os.Args) > 1 {
 		arg := os.Args[1]
+		fmt.Println("You typed: " + arg)
 		if arg == "help" {
 			fmt.Println("--Tools--")
 			for i := 0; i < len(names); i++ {
