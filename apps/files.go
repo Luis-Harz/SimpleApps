@@ -376,9 +376,13 @@ func Main21() {
 				} else {
 					showerror("No dir given")
 				}
+			} else if command == "cd" {
+				if len(args) > 0 && len(args) < 2 {
+					os.Chdir(args[0])
+				}
 			} else if command == "help" {
-				commands := []string{"rm", "edit", "cf", "mkd"}
-				functions := []string{"Remove file/dir", "edit file", "create file", "make dir"}
+				commands := []string{"rm", "edit", "cf", "mkd", "cd"}
+				functions := []string{"Remove file/dir", "edit file", "create file", "make dir", "change dir"}
 				functions2 := make([]string, len(commands))
 				for i := 0; i < len(commands); i++ {
 					line := fmt.Sprintf("[%d] %s; %s", i, commands[i], functions[i])
